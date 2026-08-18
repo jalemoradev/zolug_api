@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -7,12 +6,11 @@ import {
   AuthenticatedUser,
   JwtPayload,
 } from '../../common/types/authenticated-user.type';
+import { getJwtPrivateKey } from '../../common/config/jwt-keys';
 
 @Injectable()
 export class AuthService {
-  private readonly privateKey = readFileSync(
-    process.env.JWT_PRIVATE_KEY_PATH ?? 'keys/jwt-private.pem',
-  );
+  private readonly privateKey = getJwtPrivateKey();
 
   constructor(
     private readonly usersService: UsersService,

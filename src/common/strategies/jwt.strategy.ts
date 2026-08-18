@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -7,6 +6,7 @@ import {
   AuthenticatedUser,
   JwtPayload,
 } from '../types/authenticated-user.type';
+import { getJwtPublicKey } from '../config/jwt-keys';
 
 /**
  * Estrategia JWT RS256. Extrae el token de la cookie `zolug-auth` primero, con
@@ -32,9 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: readFileSync(
-        process.env.JWT_PUBLIC_KEY_PATH ?? 'keys/jwt-public.pem',
-      ),
+      secretOrKey: getJwtPublicKey(),
       algorithms: ['RS256'],
     });
   }
